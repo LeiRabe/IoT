@@ -1,19 +1,24 @@
 import random
 import time
-### le publisher
+from datetime import date
+# Module for mqtt client
 from paho.mqtt import client as mqtt_client
 
+today = date.today()
 
-broker = '10.11.12.98'
+broker = '10.11.6.153'
 port = 1883
-topic = "Léïya vient de badger en local"
+# On veut envoyer le qrcode
+topic = "QRCODE"
 # generate client ID with pub prefix randomly
 client_id = f'python-mqtt-{random.randint(0, 1000)}'
 username = 'leivan'
-password = 'liev'
+password = 'naviel'
 
+#CONNECT
 def connect_mqtt():
     def on_connect(client, userdata, flags, rc):
+        #ACK
         if rc == 0:
             print("Connected to MQTT Broker!")
         else:
@@ -25,14 +30,30 @@ def connect_mqtt():
     client.connect(broker, port)
     return client
 
+# Imitate the QRcode captor 
+# by generating the message to send to the broker
+def generateMsg():
+    msg = ""
+    qrCode = random.choice([4545445484,454544,400512])
+    dateAccess = today.strftime("%Y/%m/%d")
+    idPortique = random.randint(1,6)
+    msg = str(qrCode)+","+str(dateAccess)+","+str(idPortique)
+    return msg
 
+# PUBLISH to the broker
 def publish(client):
     msg_count = 0
     while True:
         time.sleep(1)
-        msg = f"messages: coucou {msg_count}"
+        # Simulate existing and none existing qrcode/message to send
+        if(msg_count%2==0):
+            msg = generateMsg()
+        else:
+            msg = f"454544,2022-12-01,5"
+        
+        # publish the generated message and it topic
         result = client.publish(topic, msg)
-        # result: [0, 1]
+        # result: [0: true, 1: false]
         status = result[0]
         if status == 0:
             print(f"Send `{msg}` to topic `{topic}`")
@@ -40,12 +61,10 @@ def publish(client):
             print(f"Failed to send message to topic {topic}")
         msg_count += 1
 
-
 def run():
     client = connect_mqtt()
     client.loop_start()
     publish(client)
-
 
 if __name__ == '__main__':
     run()
