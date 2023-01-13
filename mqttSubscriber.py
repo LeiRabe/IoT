@@ -4,11 +4,15 @@ import paho.mqtt.client as mqtt_client
 
 broker = '10.11.6.153'
 port = 1883
+# On veut recevoir les qrcode
 topic = "QRCODE"
 # generate client ID with pub prefix randomly
 client_id = f'python-mqtt-{random.randint(0, 100)}'
 username = 'leivan'
 password = 'naviel'
+
+#message received from the capteur
+msgReceived = ""
 
 #CONNECT
 def connect_mqtt() -> mqtt_client:
@@ -28,15 +32,19 @@ def connect_mqtt() -> mqtt_client:
 #SUBSCRIBE - Receive the message
 def subscribe(client: mqtt_client):
     def on_message(client, userdata, msg):
-        print(f"Received `{msg.payload.decode()}` from `{msg.topic}` topic")
-
+        msgReceived = str(msg.payload.decode())
+        print(f"Received `{msgReceived}` from `{msg.topic}` topic")
     client.subscribe(topic)
     client.on_message = on_message
 
+def retrieveMsg():
+    print("Retrieving msg: " +msgReceived)
+    return msgReceived
 
 def run():
     client = connect_mqtt()
     subscribe(client)
+    retrieveMsg()
     client.loop_forever()
 
 if __name__ == '__main__':

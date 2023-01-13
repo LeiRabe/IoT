@@ -7,6 +7,7 @@
     #   [X] if the row has been INSERTED int doorStatus is 1 if open and 0 if closed -> id user found: doorStatus = 1 
 import psycopg2
 from psycopg2 import Error
+import mqttSubscriber as sub
 
 try:
     connection = psycopg2.connect(user="postgres",
@@ -35,7 +36,8 @@ finally:
 
 # simulation message received
 # MQTT SUBSCRIBE 
-msg = '454544,2021-12-01,1'
+sub.run()
+msg = sub.retrieveMsg()
 
 #parse msg
 msgArray = msg.split(",")
