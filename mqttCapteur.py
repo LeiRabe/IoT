@@ -1,7 +1,7 @@
 import random
 import time
 from datetime import date
-### le publisher
+# Module for mqtt client
 from paho.mqtt import client as mqtt_client
 
 today = date.today()
@@ -30,6 +30,8 @@ def connect_mqtt():
     client.connect(broker, port)
     return client
 
+# Imitate the QRcode captor 
+# by generating the message to send to the broker
 def generateMsg():
     msg = ""
     qrCode = random.choice([4545445484,454544,400512])
@@ -38,17 +40,20 @@ def generateMsg():
     msg = str(qrCode)+","+str(dateAccess)+","+str(idPortique)
     return msg
 
-
+# PUBLISH to the broker
 def publish(client):
     msg_count = 0
     while True:
         time.sleep(1)
+        # Simulate existing and none existing qrcode/message to send
         if(msg_count%2==0):
             msg = generateMsg()
         else:
             msg = f"454544,2022-12-01,5"
+        
+        # publish the generated message and it topic
         result = client.publish(topic, msg)
-        # result: [0, 1]
+        # result: [0: true, 1: false]
         status = result[0]
         if status == 0:
             print(f"Send `{msg}` to topic `{topic}`")
@@ -60,7 +65,6 @@ def run():
     client = connect_mqtt()
     client.loop_start()
     publish(client)
-
 
 if __name__ == '__main__':
     run()
