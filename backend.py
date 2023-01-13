@@ -34,6 +34,7 @@ finally:
         print("connected to the pgsql db")
 
 # simulation message received
+# MQTT SUBSCRIBE 
 msg = '454544,2021-12-01,1'
 
 #parse msg
@@ -52,8 +53,8 @@ exists = str(cursor.fetchone())
 print("Row count "+str(cursor.rowcount))
 if(cursor.rowcount>0):
     print("Exists: " + exists)
-    queryInsert = ("INSERT INTO public.\"Access\"(\"idAccess\", \"idUser\", \"idPortique\", \"dateAccess\") VALUES (%s,%s,%s,%s)")
-    record_to_insert = (7,1,idPortique,"\'" + dateAccess + "\'" )
+    queryInsert = ("INSERT INTO public.\"Access\"(\"idUser\", \"idPortique\", \"dateAccess\") VALUES (%s,%s,%s)")
+    record_to_insert = (1,idPortique,"\'" + dateAccess + "\'" )
     print(queryInsert)
     try:
         cursor.execute(queryInsert,record_to_insert)
@@ -65,3 +66,5 @@ if(cursor.rowcount>0):
 
     except (Exception, Error) as error:
         print("Error while trying to insert", error)
+
+#Send information to the broker

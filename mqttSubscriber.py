@@ -2,17 +2,18 @@ import random
 import paho.mqtt.client as mqtt_client
 
 
-broker = '10.11.12.98'
+broker = '10.11.6.153'
 port = 1883
-topic = "Léïya vient de badger en local"
+topic = "QRCODE"
 # generate client ID with pub prefix randomly
 client_id = f'python-mqtt-{random.randint(0, 100)}'
 username = 'leivan'
-password = 'liev'
+password = 'naviel'
 
-
+#CONNECT
 def connect_mqtt() -> mqtt_client:
     def on_connect(client, userdata, flags, rc):
+        #ACK
         if rc == 0:
             print("Connected to MQTT Broker!")
         else:
@@ -24,7 +25,7 @@ def connect_mqtt() -> mqtt_client:
     client.connect(broker, port)
     return client
 
-
+#SUBSCRIBE - Receive the message
 def subscribe(client: mqtt_client):
     def on_message(client, userdata, msg):
         print(f"Received `{msg.payload.decode()}` from `{msg.topic}` topic")
@@ -37,7 +38,6 @@ def run():
     client = connect_mqtt()
     subscribe(client)
     client.loop_forever()
-
 
 if __name__ == '__main__':
     run()
