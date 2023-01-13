@@ -1,8 +1,10 @@
 import random
 import time
+from datetime import date
 ### le publisher
 from paho.mqtt import client as mqtt_client
 
+today = date.today()
 
 broker = '10.11.6.153'
 port = 1883
@@ -28,12 +30,23 @@ def connect_mqtt():
     client.connect(broker, port)
     return client
 
+def generateMsg():
+    msg = ""
+    qrCode = random.choice([4545445484,454544,400512])
+    dateAccess = today.strftime("%Y/%m/%d")
+    idPortique = random.randint(1,6)
+    msg = str(qrCode)+","+str(dateAccess)+","+str(idPortique)
+    return msg
+
 
 def publish(client):
     msg_count = 0
     while True:
         time.sleep(1)
-        msg = f"454544,2022-12-01,5"
+        if(msg_count%2==0):
+            msg = generateMsg()
+        else:
+            msg = f"454544,2022-12-01,5"
         result = client.publish(topic, msg)
         # result: [0, 1]
         status = result[0]
