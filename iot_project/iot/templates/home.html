@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+    {%load static%}
+    {% load qr_tags %}
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <title>Login V1</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--===============================================================================================-->
+        <link rel="icon" type="image/png" href="{% static 'images/icons/favicon.ico'%}"/>
+    <!--===============================================================================================-->
+        <link rel="stylesheet" type="text/css" href="{% static 'vendor/bootstrap/css/bootstrap.min.css'%}">
+    <!--===============================================================================================-->
+        <link rel="stylesheet" type="text/css" href="{% static 'fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
+    <!--===============================================================================================-->
+        <link rel="stylesheet" type="text/css" href="{% static 'vendor/animate/animate.css ' %}">
+    <!--==============================================================================================-->	
+        <link rel="stylesheet" type="text/css" href="{% static 'vendor/css-hamburgers/hamburgers.min.css' %}">
+    <!--===============================================================================================-->
+        <link rel="stylesheet" type="text/css" href="{% static 'vendor/select2/select2.min.css' %}">
+    <!--===============================================================================================-->
+        <link rel="stylesheet" type="text/css" href="{% static 'css/util.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+    <!--===============================================================================================-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+<script src="{% static 'canvasjs.min.js' %}"></script>
+<script>
+  //génération du graphique avec CanvaJS
+    window.onload = function () {
+        var chart = new CanvasJS.Chart("chartContainer", {
+          animationEnabled: true,
+          title:{
+            text:"Nombre d'accès aux bâtiments aux cours de la journée"
+          },
+          axisY: {
+            title: "Nombre d'accès",
+            valueFormatString: ""
+          },
+          axisX: {
+            reversed: false
+          },
+          toolTip: {
+            shared: true
+          },
+          legend: {
+            verticalAlign: "top",
+            cursor: "pointer",
+            itemclick: toggleDataSeries
+          },
+          data: [{
+            type: "stackedBar",
+            name: "Accès",
+            showInLegend: true,
+            dataPoints: {{ portique_acces_data|safe }}
+          }]
+        });
+        chart.render();
+ 
+        function toggleDataSeries(e) {
+            if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+                e.dataSeries.visible = false;
+            } else {
+                e.dataSeries.visible = true;
+            }
+            e.chart.render();
+        }
+ 
+    }
+</script>  
+    </head>
+<body>
+    
+    <div class="limiter" style="display:flex">
+      <div class="container-login100">
+        <div>
+        <h1>Bonjour {{user.firstname}} {{user.lastname}} </h1>
+      </div>
+        <div> Votre QRcode d'accès :
+          <div>{% qr_from_text "{{user.qrcode}}" size="T" %}</div>
+        </div>
+        <div id="chartContainer" style="width: 100%; height: 360px;"></div>
+      </div>
+    </div>
+
+<!--===============================================================================================-->	
+<script src="{% static 'vendor/jquery/jquery-3.2.1.min.js ' %}'"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'vendor/bootstrap/js/popper.js ' %}"></script>
+	<script src="{% static 'vendor/bootstrap/js/bootstrap.min.js  ' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'vendor/select2/select2.min.js ' %} "></script>
+<!--===============================================================================================-->
+	<script src="{% static 'vendor/tilt/tilt.jquery.min.js' %} "></script>
+	<script >
+		$('.js-tilt').tilt({
+			scale: 1.1
+		})
+	</script>
+<!--===============================================================================================-->
+	<script src="{% static 'js/main.js' %} "></script>
+
+</body>
+</html>
+
+     
