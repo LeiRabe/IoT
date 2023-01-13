@@ -6,14 +6,17 @@ from paho.mqtt import client as mqtt_client
 
 broker = '10.11.6.153'
 port = 1883
-topic = "Léïya vient de badger"
+# On veut envoyer le qrcode
+topic = "QRCODE"
 # generate client ID with pub prefix randomly
 client_id = f'python-mqtt-{random.randint(0, 1000)}'
 username = 'leivan'
-password = 'liev'
+password = 'naviel'
 
+#CONNECT
 def connect_mqtt():
     def on_connect(client, userdata, flags, rc):
+        #ACK
         if rc == 0:
             print("Connected to MQTT Broker!")
         else:
@@ -30,7 +33,7 @@ def publish(client):
     msg_count = 0
     while True:
         time.sleep(1)
-        msg = f"messages: coucou {msg_count}"
+        msg = f"454544,2022-12-01,5"
         result = client.publish(topic, msg)
         # result: [0, 1]
         status = result[0]
@@ -39,7 +42,6 @@ def publish(client):
         else:
             print(f"Failed to send message to topic {topic}")
         msg_count += 1
-
 
 def run():
     client = connect_mqtt()
