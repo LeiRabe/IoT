@@ -1,6 +1,5 @@
 import random
-
-from paho.mqtt import client as mqtt_client
+import paho.mqtt.client as mqtt_client
 
 
 broker = '10.11.12.98'
