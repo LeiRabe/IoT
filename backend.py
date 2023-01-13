@@ -40,6 +40,25 @@ msg = '454544,2021-12-01,1'
 #parse msg
 msgArray = msg.split(",")
 qrcode = str(msgArray[0])
-idPortique = str(msgArray[2])
-dateAccess = str(msgArray[1])
-print("The user with " + qrcode + " enters the portique n" + idPortique + " the " + dateAccess)
+idPortique = msgArray[2]
+dateAccess = msgArray[1]
+# print("The user with " + qrcode + " enters the portique n" + idPortique + " the " + dateAccess)
+
+# verify if there's a user associated with the qrcode
+queryUser = ("SELECT \"idUser\" FROM public.\"User\" WHERE  qrcode = " + "\'" +qrcode+ "\'")
+cursor.execute(queryUser)
+exists = str(cursor.fetchone())
+print("Row count "+str(cursor.rowcount))
+if(cursor.rowcount>0):
+    print("Exists: " + exists)
+    queryInsert = ("INSERT INTO public.\"Access\"(\"idAccess\", \"idUser\", \"idPortique\", \"dateAccess\") VALUES (3,1, " + idPortique + ", \'" + dateAccess + "\')")
+    print(queryInsert)
+    try:
+        cursor.execute(queryInsert)
+        if(cursor.rowcount>0):
+            print("okay")
+    except (Exception, Error) as error:
+        print("Error while trying to insert", error)
+        
+    
+
