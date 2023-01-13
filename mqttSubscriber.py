@@ -1,4 +1,7 @@
+#Useful import
+
 import random
+# Module for mqtt client
 import paho.mqtt.client as mqtt_client
 
 
@@ -36,7 +39,10 @@ def subscribe(client: mqtt_client):
         print(f"Received `{msgReceived}` from `{msg.topic}` topic")
     client.subscribe(topic)
     client.on_message = on_message
+#/!\ can't return the message sent by the broker
+#return msgReceived
 
+# Retrieve the message from the broker 
 def retrieveMsg():
     print("Retrieving msg: " +msgReceived)
     return msgReceived

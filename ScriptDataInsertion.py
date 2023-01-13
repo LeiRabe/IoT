@@ -1,17 +1,16 @@
-#Script data insertion
+#Script for sample data insertion
 
 #Connection 
 import psycopg2
 from psycopg2 import Error
 
 try:
+    #connection creation
     connection = psycopg2.connect(user="postgres",
                                   password="docker",
                                   host="10.11.6.151",
                                   port="5432",
                                   database="iot")
-
-    #connection.autocommit = True
     #cursor to perform database operations
     cursor = connection.cursor()
     query = "INSERT INTO public.\"Portique\"" + " (\"idPortique\", \"nomBat\") VALUES (%s, %s);"
@@ -23,7 +22,10 @@ try:
         (6,"Batiment 6"),
         
     ]
+    #execute several queries at the same time: several input
     cursor.executemany(query,valuesToInsert);
+
+    #commit to the db
     connection.commit
 
 except (Exception, Error) as error:
